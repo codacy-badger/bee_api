@@ -28,7 +28,7 @@ app.json_encoder = DecJSONEncoder
 
 
 #api = Api(app)
-CORS(app, resources=r'/api/*')
+CORS(app, resources=r'/*')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///testing4.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
@@ -98,7 +98,7 @@ def new_country():
                     "Country": result.data})
 
 
-@app.route('/stateprovinces')
+@app.route('/state-provinces')
 def get_stateProvinces():
     stateprovinces = StateProvince.query.all()
     # Serialize the queryset
@@ -106,7 +106,7 @@ def get_stateProvinces():
     return jsonify({'stateprovinces': result.data})
 
 
-@app.route("/stateprovinces/<int:pk>")
+@app.route("/state-provinces/<int:pk>")
 def get_stateProvince(pk):
     try:
         stateProvince = StateProvince.query.get(pk)
@@ -116,7 +116,7 @@ def get_stateProvince(pk):
     return jsonify({"stateprovinces": result.data})
 
 
-@app.route("/stateprovinces/", methods=["POST"])
+@app.route("/state-provinces/", methods=["POST"])
 def new_stateprovinces():
     json_data = request.get_json()
     if not json_data:
