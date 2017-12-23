@@ -103,4 +103,6 @@ class HiveData(db.Model):
     dateCreated = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     temperature = db.Column(db.Numeric)
     humidity = db.Column(db.Numeric)
+    sensor = db.Column(db.Integer)
+    outdoor = db.Column(db.BOOLEAN)
 #    door_open = Column(Boolean, server_default=True)

@@ -1,4 +1,5 @@
 import decimal
+from dateutil import parser
 import flask.json
 
 from flask import Flask, jsonify, request
@@ -297,13 +298,21 @@ def new_hivedata():
     if hiveId is None:
         return jsonify({'message': 'Invalid Hive Id'}), 400
 
-    hiveData = HiveData(hiveId=data['hive']['id'],temperature=data['temperature'],
-        humidity=data['humidity']
-    )
+    try:
+        for probe in data['probes']:
+            hiveData = HiveData(hiveId = data['hive']['id'],
+                                temperature = probe['temperature'],
+                                humidity = probe['humidity'],
+                                sensor = probe['sensor'],
+                                outdoor = probe['outdoor'],
+                                dateCreated = parser.parse(
+                                    data['dateCreated']))
+            db.session.add(hiveData)
+    except KeyError as k:
+        return jsonify({'message': 'Invalid key: {}'.format(k)}), 406
 
-    db.session.add(hiveData)
     db.session.commit()
-    return jsonify({"message": "Created Hive Data Entry"})
+    return jsonify({"message": "Updated Hive Data"})
 
 
 @app.route("/hivedata/<int:pk>")

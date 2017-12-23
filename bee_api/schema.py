@@ -61,6 +61,8 @@ class HiveSchema(Schema):
 
 class HiveDataSchema(Schema):
     hive = fields.Nested(HiveSchema, exclude = ('stateProvinces',))
+    probes = []
 
     class Meta:
-        fields = ('id', 'hive', 'dateCreated', 'temperature', 'humidity')
+        fields = ('id', 'hive', 'probes', 'dateCreated', 'temperature',
+                  'humidity', 'outdoor', 'sensor')
