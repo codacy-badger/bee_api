@@ -2,7 +2,7 @@ import decimal
 from dateutil import parser
 import flask.json
 
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request
 
 from flask_restless import ProcessingException
 from sqlalchemy.exc import IntegrityError
@@ -18,7 +18,6 @@ class DecJSONEncoder(flask.json.JSONEncoder):
             return str(obj)
         return super(DecJSONEncoder, self).default(obj)
 
-bp = Blueprint('app', __name__)
 #app = Flask(__name__)
 #app.config.from_pyfile('config.py')
 #app.json_encoder = DecJSONEncoder
@@ -331,7 +330,7 @@ def get_hivedata():
     return jsonify({"hivedata": result.data})
 
 
-@bp.route("/")
+@app.route("/")
 def get_index():
     return jsonify({"message": "hello"})
 
