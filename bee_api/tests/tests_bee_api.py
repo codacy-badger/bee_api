@@ -1,43 +1,45 @@
 import os
 import glob
 import json
-from flask_fixtures import FixturesMixin, load_fixtures
+from flask_fixtures import load_fixtures
 from flask_fixtures.loaders import JSONLoader
-from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from bee_api import app, db
+from bee_api.api import db, app
+
 import unittest
 import tempfile
-
 
 class BeeWebTestCase(unittest.TestCase):
 
     def setUp(self):
-        db_name = 'testing_temp.db'
-        self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-#        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(db_name)
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///testing_temp.db'
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        self.db_file = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),'..',db_name)
+        app_settings = os.getenv(
+            'APP_SETTINGS',
+            'bee_api.config.TestingConfig'
+        )
+        app.config.from_object(app_settings)
+
         fixture_files = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             '..','fixtures','*json')
 
-        self.app = app.test_client()
         with app.app_context():
             db.create_all()
             for fixture_file in glob.glob(fixture_files):
                 fixtures = JSONLoader().load(fixture_file)
                 load_fixtures(db, fixtures)
 
+        app.testing = True
+        self.app = app.test_client()
+
+        with app.test_client() as c:
+            response = c.get('/')
+            print('hi')
+
 
     def tearDown(self):
         db.session.remove()
         with app.app_context():
             db.drop_all()
-            os.close(self.db_fd)
+#            os.close(self.db_fd)
   #          os.unlink(app.config['DATABASE'])
 
 
@@ -172,6 +174,10 @@ class BeeWebTestCase(unittest.TestCase):
         json_resp = json.loads(rv.data)
         self.assertEqual(json_resp['message'], 'Created Hive Data Entry')
 
+
+    def test_index(self):
+        rv = self.app.get('/')
+        self.assertEqual(rv.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()

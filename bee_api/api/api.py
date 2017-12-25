@@ -2,17 +2,13 @@ import decimal
 from dateutil import parser
 import flask.json
 
-from flask import Flask, jsonify, request
+from flask import jsonify, request, Blueprint
 
-from flask_restful import Api
 from flask_restless import ProcessingException
-from flask_cors import CORS
-from flask_script import Manager
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from flask_migrate import Migrate, MigrateCommand
-from schema import *
-from models import db
+from bee_api.api import db, app
+from bee_api.schema import *
+from bee_api.models import Owner, Country, Location, Hive, HiveData
 
 
 class DecJSONEncoder(flask.json.JSONEncoder):
@@ -22,21 +18,21 @@ class DecJSONEncoder(flask.json.JSONEncoder):
             return str(obj)
         return super(DecJSONEncoder, self).default(obj)
 
-
-app = Flask(__name__)
-app.config.from_pyfile('config.py')
-app.json_encoder = DecJSONEncoder
+bp = Blueprint('app', __name__)
+#app = Flask(__name__)
+#app.config.from_pyfile('config.py')
+#app.json_encoder = DecJSONEncoder
 
 
 #api = Api(app)
-CORS(app, resources=r'/*')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///testing4.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+#CORS(app, resources=r'/*')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///testing4.db'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-db.init_app(app)
-migrate = Migrate(app, db)
-manager = Manager(app)
-manager.add_command('db', MigrateCommand)
+#db.init_app(app)
+#migrate = Migrate(app, db)
+#manager = Manager(app)
+#manager.add_command('db', MigrateCommand)
 
 country_schema = CountrySchema()
 countries_schema = CountrySchema(many=True)
@@ -335,5 +331,10 @@ def get_hivedata():
     return jsonify({"hivedata": result.data})
 
 
+@bp.route("/")
+def get_index():
+    return jsonify({"message": "hello"})
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+   app.run(host='0.0.0.0')

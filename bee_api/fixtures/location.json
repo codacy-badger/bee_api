@@ -1,6 +1,6 @@
 [
   {
-    "model": "models.Location",
+    "model": "bee_api.models.Location",
     "records": [
       {
         "streetAddress": "123 Main St.",
