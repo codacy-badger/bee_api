@@ -135,14 +135,14 @@ class BeeWebTestCase(unittest.TestCase):
                            content_type='application/json')
         self.assertEqual(rv.status_code, 409)
 
-#    def test_add_location(self):
-#        rv = self.app.post('/locations/',
-#                           content_type='application/json',
-#                           data=json.dumps(dict(city='Hanover',
-#                                streetAddress='84 Summer St.',
-#                                stateProvince=dict(name='Massachusetts', id=21))))
-#
-#       self.assertEqual(rv.status_code, 200)
+    def test_add_location(self):
+        rv = self.app.post('/locations/',
+                           content_type='application/json',
+                           data=json.dumps(dict(city='Hanover',
+                                streetAddress='84 Summer St.',
+                                stateProvince=dict(name='Massachusetts', id=21))))
+
+        self.assertEqual(rv.status_code, 200)
 
     def test_get_all_locations(self):
         rv = self.app.get('/locations')

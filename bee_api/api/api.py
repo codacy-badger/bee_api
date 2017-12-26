@@ -163,11 +163,11 @@ def new_locations():
     if errors:
         return jsonify(errors), 422
 
-    stateProvince = StateProvince.query.filter_by(
-        name = data['stateProvince']['id']
+    stateProv = StateProvince.query.filter_by(
+        id = data['stateProvince']['id']
     )
 
-    if stateProvince is None:
+    if stateProv is None:
         country = Country.query.filter_by(
             name=data['stateprovince']['country']['name']
         )
@@ -175,16 +175,16 @@ def new_locations():
             country = Country(
                 name=data['stateProvince']['country']['name'])
             db.session.add(country)
-        stateProvince = StateProvince(
-            name=data['stateprovince']['name'],
-            abbreviation = data['stateprovince']['abbreviation'],
-            country = country
+            stateProv = StateProvince(
+               name=data['stateprovince']['name'],
+               abbreviation = data['stateprovince']['abbreviation'],
+               country = country
         )
 
     if Location.query.filter_by(
         streetAddress=data['streetAddress'],
         city=data['city'],
-        stateProvince=stateProvince).first():
+        stateProvinceId=data['stateProvince']['id']).first():
         raise ProcessingException(
             description='Location, {}, {}, already exists'.format(
                 data['streetAddress'], data['city']), code=409)
@@ -193,7 +193,7 @@ def new_locations():
     location = Location(
         streetAddress=data['streetAddress'],
         city=data['city'],
-        stateProvince=stateProvince)
+        stateProvinceId=data['stateProvince']['id'])
 
     db.session.add(location)
     db.session.commit()
