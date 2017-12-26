@@ -3,12 +3,33 @@ import glob
 import json
 from flask_fixtures import load_fixtures
 from flask_fixtures.loaders import JSONLoader
-from bee_api.api import db, app
+from bee_api.api.api import db, app
+from flask import Flask, jsonify
+from datetime import datetime
 
 import unittest
 import tempfile
 
+
 class BeeWebTestCase(unittest.TestCase):
+    def create_app(self):
+        app_settings = os.getenv(
+            'APP_SETTINGS',
+            'bee_api.config.TestingConfig'
+        )
+        app.config.from_object(app_settings)
+
+        fixture_files = os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            '..','fixtures','*json')
+
+        with app.app_context():
+            db.create_all()
+            for fixture_file in glob.glob(fixture_files):
+                fixtures = JSONLoader().load(fixture_file)
+                load_fixtures(db, fixtures)
+
+        return app
 
     def setUp(self):
         app_settings = os.getenv(
@@ -30,17 +51,13 @@ class BeeWebTestCase(unittest.TestCase):
         app.testing = True
         self.app = app.test_client()
 
-        with app.test_client() as c:
-            response = c.get('/')
-            print('hi')
-
 
     def tearDown(self):
         db.session.remove()
         with app.app_context():
             db.drop_all()
 #            os.close(self.db_fd)
-  #          os.unlink(app.config['DATABASE'])
+#            os.unlink(app.config['DATABASE'])
 
 
     def test_get_all_countries(self):
@@ -74,7 +91,7 @@ class BeeWebTestCase(unittest.TestCase):
 
 
     def test_get_all_statesprovinces(self):
-        rv = self.app.get('/stateprovinces')
+        rv = self.app.get('/state-provinces')
         self.assertEqual(rv.status_code, 200)
         json_resp = json.loads(rv.data)
 
@@ -86,7 +103,7 @@ class BeeWebTestCase(unittest.TestCase):
         self.assertEqual(json_resp['stateprovinces'][0]['abbreviation'], 'AL')
 
     def test_get_statesprovinces(self):
-        rv = self.app.get('/stateprovinces/21')
+        rv = self.app.get('/state-provinces/21')
         self.assertEqual(rv.status_code, 200)
         json_resp = json.loads(rv.data)
 
@@ -103,7 +120,7 @@ class BeeWebTestCase(unittest.TestCase):
     def test_add_stateprovinces(self):
         json_data = dict(name="Quebec", abbreviation="QC",
                      country=dict(name="Canada", id=2))
-        rv = self.app.post('/stateprovinces/',
+        rv = self.app.post('/state-provinces/',
                            data = json.dumps(json_data),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 200)
@@ -115,7 +132,7 @@ class BeeWebTestCase(unittest.TestCase):
         json_data = dict(name="Quebec", abbreviation="QC",
                      country=dict(name="Canada", id=2))
 
-        rv = self.app.post('/stateprovinces/',
+        rv = self.app.post('/state-provinces/',
                            data = json.dumps(json_data),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 409)
@@ -125,9 +142,9 @@ class BeeWebTestCase(unittest.TestCase):
 #                           content_type='application/json',
 #                           data=json.dumps(dict(city='Hanover',
 #                                streetAddress='84 Summer St.',
-#                                stateprovince=dict(name='Massachusetts', id=21))))
-
- #       self.assertEqual(rv.status_code, 200)
+#                                stateProvince=dict(name='Massachusetts', id=21))))
+#
+#       self.assertEqual(rv.status_code, 200)
 
     def test_get_all_locations(self):
         rv = self.app.get('/locations')
@@ -165,19 +182,20 @@ class BeeWebTestCase(unittest.TestCase):
 
 
     def test_add_hivedata(self):
-        json_data = dict(humidity=10.5, temperature=78.5,
-                     hive=dict(id=1))
+        json_data = dict(probes=[
+                            dict(humidity = 10.5, temperature = 78.5,
+                            outdoor = False, sensor = 11),
+                            dict(humidity=20.5, temperature=88.5,
+                            outdoor=True, sensor=22)
+                            ], hive=dict(id=1),
+                            dateCreated=datetime.utcnow().__str__())
         rv = self.app.post('/hivedata/',
                            data = json.dumps(json_data),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 200)
         json_resp = json.loads(rv.data)
-        self.assertEqual(json_resp['message'], 'Created Hive Data Entry')
+        self.assertEqual(json_resp['message'], 'Updated Hive Data')
 
-
-    def test_index(self):
-        rv = self.app.get('/')
-        self.assertEqual(rv.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()

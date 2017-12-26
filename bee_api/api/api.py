@@ -8,7 +8,7 @@ from flask_restless import ProcessingException
 from sqlalchemy.exc import IntegrityError
 from bee_api.api import db, app
 from bee_api.schema import *
-from bee_api.models import Owner, Country, Location, Hive, HiveData
+from bee_api.models import Owner, Country, Location, Hive, HiveData, StateProvince
 
 
 class DecJSONEncoder(flask.json.JSONEncoder):
@@ -18,20 +18,6 @@ class DecJSONEncoder(flask.json.JSONEncoder):
             return str(obj)
         return super(DecJSONEncoder, self).default(obj)
 
-#app = Flask(__name__)
-#app.config.from_pyfile('config.py')
-#app.json_encoder = DecJSONEncoder
-
-
-#api = Api(app)
-#CORS(app, resources=r'/*')
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///testing4.db'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-#db.init_app(app)
-#migrate = Migrate(app, db)
-#manager = Manager(app)
-#manager.add_command('db', MigrateCommand)
 
 country_schema = CountrySchema()
 countries_schema = CountrySchema(many=True)
