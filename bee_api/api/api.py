@@ -2,17 +2,13 @@ import decimal
 from dateutil import parser
 import flask.json
 
-from flask import Flask, jsonify, request
+from flask import jsonify, request
 
-from flask_restful import Api
 from flask_restless import ProcessingException
-from flask_cors import CORS
-from flask_script import Manager
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from flask_migrate import Migrate, MigrateCommand
-from schema import *
-from models import db
+from bee_api import db, app
+from bee_api.schema import *
+from bee_api.models import Owner, Country, Location, Hive, HiveData, StateProvince
 
 
 class DecJSONEncoder(flask.json.JSONEncoder):
@@ -22,21 +18,6 @@ class DecJSONEncoder(flask.json.JSONEncoder):
             return str(obj)
         return super(DecJSONEncoder, self).default(obj)
 
-
-app = Flask(__name__)
-app.config.from_pyfile('config.py')
-app.json_encoder = DecJSONEncoder
-
-
-#api = Api(app)
-CORS(app, resources=r'/*')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///testing4.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-db.init_app(app)
-migrate = Migrate(app, db)
-manager = Manager(app)
-manager.add_command('db', MigrateCommand)
 
 country_schema = CountrySchema()
 countries_schema = CountrySchema(many=True)
@@ -182,11 +163,11 @@ def new_locations():
     if errors:
         return jsonify(errors), 422
 
-    stateProvince = StateProvince.query.filter_by(
-        name = data['stateProvince']['id']
+    stateProv = StateProvince.query.filter_by(
+        id = data['stateProvince']['id']
     )
 
-    if stateProvince is None:
+    if stateProv is None:
         country = Country.query.filter_by(
             name=data['stateprovince']['country']['name']
         )
@@ -194,16 +175,16 @@ def new_locations():
             country = Country(
                 name=data['stateProvince']['country']['name'])
             db.session.add(country)
-        stateProvince = StateProvince(
-            name=data['stateprovince']['name'],
-            abbreviation = data['stateprovince']['abbreviation'],
-            country = country
+            stateProv = StateProvince(
+               name=data['stateprovince']['name'],
+               abbreviation = data['stateprovince']['abbreviation'],
+               country = country
         )
 
     if Location.query.filter_by(
         streetAddress=data['streetAddress'],
         city=data['city'],
-        stateProvince=stateProvince).first():
+        stateProvinceId=data['stateProvince']['id']).first():
         raise ProcessingException(
             description='Location, {}, {}, already exists'.format(
                 data['streetAddress'], data['city']), code=409)
@@ -212,7 +193,7 @@ def new_locations():
     location = Location(
         streetAddress=data['streetAddress'],
         city=data['city'],
-        stateProvince=stateProvince)
+        stateProvinceId=data['stateProvince']['id'])
 
     db.session.add(location)
     db.session.commit()
@@ -335,5 +316,10 @@ def get_hivedata():
     return jsonify({"hivedata": result.data})
 
 
+@app.route("/")
+def get_index():
+    return jsonify({"message": "hello"})
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+   app.run(host='0.0.0.0')

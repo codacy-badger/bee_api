@@ -1,5 +1,4 @@
-from marshmallow import Schema, fields, ValidationError, pre_load
-from models import *
+from marshmallow import Schema, fields, ValidationError
 
 
 # Custom validator
@@ -38,7 +37,7 @@ class LocationSchema(Schema):
 class OwnerSchema(Schema):
     location = fields.Nested(LocationSchema)
     hives = fields.Nested('HiveSchema', many=True,
-                          exclude=('owner', ))
+                          exclude=('owner', 'hiveData'))
     fullName = fields.Method("format_name", dump_only=True)
 
     class Meta:

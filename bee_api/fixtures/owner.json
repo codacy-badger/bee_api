@@ -1,6 +1,6 @@
 [
   {
-    "model": "models.Owner",
+    "model": "bee_api.models.Owner",
     "records": [
       {
         "firstName": "Mickey",

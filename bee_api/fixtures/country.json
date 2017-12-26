@@ -1,6 +1,6 @@
 [
     {
-        "model": "models.Country",
+        "model": "bee_api.models.Country",
         "records": [{
             "name": "United States"
         },

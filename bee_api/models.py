@@ -1,15 +1,10 @@
 import datetime
-#from marshmallow_jsonapi import Schema, fields
-#from marshmallow import validate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime,\
     Numeric, Boolean, create_engine
 
-#from flask_security import UserMixin, RoleMixin, SQLAlchemyUserDatastore
-
-from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 db = SQLAlchemy()
