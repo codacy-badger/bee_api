@@ -6,7 +6,7 @@ from flask import jsonify, request
 
 from flask_restless import ProcessingException
 from sqlalchemy.exc import IntegrityError
-from bee_api.api import db, app
+from bee_api import db, app
 from bee_api.schema import *
 from bee_api.models import Owner, Country, Location, Hive, HiveData, StateProvince
 
