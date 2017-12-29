@@ -1,12 +1,11 @@
 import os
-basedir = os.path.abspath(os.path.dirname(__file__))
-database_name = 'beehive.db'
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, database_name)
-SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
-
 
 class BaseConfig:
-    """Base configuration."""
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    database_name = 'beehive.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, database_name)
+    SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+
     SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious')
     SECRET_TIMEOUT = int(os.getenv('SECRET_TIMEOUT', '900'))
     DEBUG = False
@@ -15,25 +14,24 @@ class BaseConfig:
 
 
 class DevelopmentConfig(BaseConfig):
-    """Development configuration."""
     DEBUG = True
     BCRYPT_LOG_ROUNDS = 4
     database_name = 'beehive_dev.db'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, database_name)
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BaseConfig.basedir,
+                                                          database_name)
+
 
 class TestingConfig(BaseConfig):
-    """Testing configuration."""
     DEBUG = True
     TESTING = True
     BCRYPT_LOG_ROUNDS = 4
     database_name = 'beehive_test.db'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, database_name)
-    LIVESERVER_PORT = 5000
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BaseConfig.basedir,
+                                                          database_name)
 
     PRESERVE_CONTEXT_ON_EXCEPTION = False
 
 
 class ProductionConfig(BaseConfig):
-    """Production configuration."""
-    SECRET_KEY = 'my_precious'
+    SECRET_KEY = 'my_precious_production'
     DEBUG = False

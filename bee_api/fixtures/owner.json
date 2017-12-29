@@ -7,7 +7,9 @@
         "lastName": "Mouse",
         "email": "mm@disney.com",
         "phoneNumber": "7812175265",
-        "locationId": 1
+        "locationId": 1,
+        "passwd": "test124",
+        "admin": true
       }
     ]
   }
