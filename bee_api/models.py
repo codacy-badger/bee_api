@@ -31,6 +31,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
+    api = db.Column(db.String(255))
     firstName = db.Column(db.String(50))
     lastName = db.Column(db.String(50))
     phoneNumber = db.Column(db.String(20))
@@ -53,7 +54,8 @@ class User(db.Model):
 #        return address
 
     def __init__(self, email, password, firstName = None, lastName = None,
-                 phoneNumber = None,  locationId = None, roleId=None):
+                 phoneNumber = None,  locationId = None, roleId=None,
+                 api=None):
         self.email = email
         self.password = bcrypt.generate_password_hash(
             password, app.config.get('BCRYPT_LOG_ROUNDS')
@@ -65,6 +67,7 @@ class User(db.Model):
         self.locationId = locationId
         self.active = True
         self.roleId = roleId
+        self.api = api
  #       if roles is None:
  #           roles = []
  #       self.roles = roles

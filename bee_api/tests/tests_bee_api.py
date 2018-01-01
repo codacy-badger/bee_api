@@ -28,7 +28,10 @@ class BeeWebTestCase(unittest.TestCase):
             phoneNumber = account['phoneNumber']
         else:
             phoneNumber = None
-
+        if 'api' in account:
+            api = account['api']
+        else:
+            api = None
         role = Role.query.filter_by(name=roles).first()
 
         user = User(
@@ -37,20 +40,31 @@ class BeeWebTestCase(unittest.TestCase):
             firstName=firstName,
             lastName=lastName,
             phoneNumber=phoneNumber,
-            roleId=role.id
+            roleId=role.id,
+            api=api
         )
         db.session.add(user)
         db.session.commit()
-        with self.app:
-            resp_login = self.app.post(
-                '/auth/login',
-                data=json.dumps(dict(
+        if api is None:
+            with self.app:
+                resp_login = self.app.post(
+                    '/auth/login',
+                    data=json.dumps(dict(
                     email=account['email'],
                     password=account['password']
-                )),
+                    )),
+                content_type='application/json'
+                )
+        else:
+            with self.app:
+                resp_login = self.app.post(
+                    '/auth/api',
+                    data=json.dumps(dict(
+                        api=api
+                    )),
                 content_type='application/json'
             )
-            return resp_login
+        return resp_login
 
     def setUp(self):
         app_settings = os.getenv(
@@ -199,6 +213,23 @@ class BeeWebTestCase(unittest.TestCase):
                 )
             )
         self.assertEqual(response.status_code, 401)
+
+    def test_get_all_statesprovinces_api(self):
+        user = {'email': 'joe@gmail.com', 'password': 'test123',
+                'api': 'thisisatestofapi'}
+        response = self.create_user_token(account=user)
+        data = json.loads(response.data.decode())
+
+        rv = self.app.get('/state-provinces')
+        self.assertEqual(rv.status_code, 200)
+        json_resp = json.loads(rv.data)
+
+        self.assertEqual(len(json_resp['stateprovinces']), 50)
+        self.assertEqual(json_resp['stateprovinces'][0]['name'], 'Alabama')
+        self.assertEqual(json_resp['stateprovinces'][0]['country']['id'], 1)
+        self.assertEqual(json_resp['stateprovinces'][0]['country']['name'],
+                         'United States')
+        self.assertEqual(json_resp['stateprovinces'][0]['abbreviation'], 'AL')
 
     def test_get_all_statesprovinces(self):
         user = {'email': 'joe@gmail.com', 'password': 'test123'}

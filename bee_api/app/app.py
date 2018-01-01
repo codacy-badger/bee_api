@@ -379,21 +379,49 @@ def login():
     if errors:
         return jsonify(errors), 422
 
-    # We can now pass this complex object directly to the
-    # create_access_token method. This will allow us to access
-    # the properties of this object in the user_claims_loader
-    # function, and get the identity of this object from the
-    # user_identity_loader function.
- #   access_token = create_access_token(identity=user)
- #   ret = {'access_token': access_token}
+    try:
+        # fetch the user data
+        user = User.query.filter_by(email=json_data.get('email')).first()
+        if user and bcrypt.check_password_hash(user.password,
+                                        json_data.get('password')):
+            access_token = create_access_token(identity=user)
+#            access_token = create_access_token(identity=user)
+            if access_token:
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Successfully logged in.',
+                    'auth_token': access_token
+                }
+                return jsonify(responseObject), 200
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'User does not exist.'
+            }
+            return jsonify(responseObject), 404
+    except Exception as e:
+        print(e)
+        responseObject = {
+            'status': 'fail',
+            'message': 'Try again'
+        }
+        return jsonify(responseObject), 500
+
+@app.route("/auth/api", methods=["POST"])
+def api_login():
+    # get the post data
+    json_data = request.get_json()
+    if not json_data:
+        return jsonify({'message': 'No input data provided'}), 400
+    # Validate and deserialize input
+    data, errors = user_schema.load(json_data)
+    if errors:
+        return jsonify(errors), 422
 
     try:
         # fetch the user data
-        user = User.query.filter_by(
-            email=json_data.get('email')
-        ).first()
-        if user and bcrypt.check_password_hash(user.password,
-                                        json_data.get('password')):
+        user = User.query.filter_by(api=json_data.get('api')).first()
+        if user:
             access_token = create_access_token(identity=user)
 #            access_token = create_access_token(identity=user)
             if access_token:
