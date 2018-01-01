@@ -17,7 +17,6 @@ from sqlalchemy.exc import IntegrityError
 from flask_migrate import Migrate, MigrateCommand
 from bee_api.schema import *
 from flask_bcrypt import Bcrypt
-#from bee_api.models import db
 
 app = Flask(__name__)
 CORS(app, resources=r'/*')
@@ -34,3 +33,4 @@ db.init_app(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
+

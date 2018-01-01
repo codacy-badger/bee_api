@@ -5,11 +5,19 @@ import flask.json
 from flask import Flask, jsonify, request
 from sqlalchemy.exc import IntegrityError
 from flask_restless import ProcessingException
-from flask_jwt import JWT, jwt_required
-from bee_api.api import db, app, bcrypt
+from flask_security import auth_token_required, SQLAlchemyUserDatastore, \
+        Security
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, \
+    get_jwt_identity, get_jwt_claims
+from bee_api.app import db, app, bcrypt
 from bee_api.schema import *
-from bee_api.models import Owner, Country, Location, Hive, HiveData,\
-    StateProvince, BlacklistToken
+from bee_api.models import User, Country, Location, Hive, HiveData,\
+    StateProvince, BlacklistToken, Role
+
+
+# Setup Flask-Security
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
 
 country_schema = CountrySchema()
 countries_schema = CountrySchema(many=True)
@@ -17,12 +25,13 @@ stateProvince_schema = StateProvinceSchema()
 stateProvinces_schema = StateProvinceSchema(many=True)
 location_schema = LocationSchema()
 locations_schema = LocationSchema(many=True)
-owner_schema = OwnerSchema()
-owners_schema = OwnerSchema(many=True)
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 hive_schema = HiveSchema()
 hives_schema = HiveSchema(many=True)
 hiveData_schema = HiveDataSchema()
 hiveDatas_schema = HiveDataSchema(many=True)
+
 
 class DecJSONEncoder(flask.json.JSONEncoder):
     def default(self, obj):
@@ -32,26 +41,36 @@ class DecJSONEncoder(flask.json.JSONEncoder):
         return super(DecJSONEncoder, self).default(obj)
 
 
-def verify(email, password):
-    if not (email and password):
-        return False
+jwt = JWTManager(app)
 
-    try:
-        owner = Owner.query.filter_by(
-            email=email).first()
-        if owner and bcrypt.check_password_hash(
-            owner.passwd, json_data.get('password')):
-            return owner
-        else:
-            return False
-    except:
-        return False
+@jwt.user_claims_loader
+def add_claims_to_access_token(user):
+    if user.roleId is None:
+        role_name = None
+    else:
+        role = Role.query.get(user.roleId)
+        role_name = role.name
 
-def identity(payload):
-    user_id = payload['identity']
-    return {"user_id": user_id}
+    return {'roles': role_name}
 
-jwt = JWT(app, verify, identity)
+#@jwt.user_loader_callback_loader
+#def user_loader_callback(identity):
+#    user = User.query.get(identity)
+#    if user is None:
+#        return None
+
+#    if user.roleId is None:
+#        role_name = None
+#    else:
+#        role = Role.query.get(user.roleId)
+#        role_name = role.name
+#    return dict(id=identity, roles=role_name)
+#    return user
+
+@jwt.user_identity_loader
+def get_identity_for_access_token(user):
+    return user.id
+
 
 def add_country_helper(json_data):
     country = Country(name=json_data['name'],)
@@ -59,47 +78,47 @@ def add_country_helper(json_data):
     db.session.commit()
     return country
 
-def add_owner_helper(json_data):
-    if 'firstname' in json_data:
-        fname = json_data.get('firstname')
+def add_user_helper(json_data):
+    if 'firstName' in json_data:
+        fname = json_data.get('firstName')
     else:
         fname = None
-    if 'lastname' in json_data:
-        lname = json_data.get('lastname')
+    if 'lastName' in json_data:
+        lname = json_data.get('lastName')
     else:
         lname = None
-    if 'phonenumber' in json_data:
-        phonenumber = json_data.get('phonenumber')
+    if 'phoneNumber' in json_data:
+        phonenumber = json_data.get('phoneNumber')
     else:
         phonenumber = None
-    if 'locationid' in json_data:
-        location = json_data.get('locationid')
+    if 'locationId' in json_data:
+        location = json_data.get('locationId')
     else:
         location = None
-    if 'admin' in json_data:
-        admin = json_data.get('admin')
+    if 'roles' in json_data:
+        role = Role.query.filter_by(name=json_data['roles']).first()
+        role_id = role.id
     else:
-        admin = None
+        role_id = None
 
-    rc = json_data.get('email')
     try:
-        owner = Owner(
+        user = User(
             email=json_data.get('email'),
-            passwd=json_data.get('password'),
+            password=json_data.get('password'),
             firstName=fname,
             lastName=lname,
             phoneNumber=phonenumber,
             locationId=location,
-            admin=admin
+            roleId=role_id
         )
-        db.session.add(owner)
+        db.session.add(user)
         db.session.commit()
         # generate the auth token
-        auth_token = owner.encode_auth_token(owner.id)
+        auth_token = user.encode_auth_token()
         responseObject = {
             'status': 'success',
             'message': 'Successfully registered.',
-            'auth_token': auth_token.decode()
+            'auth_token': auth_token
         }
         return jsonify(responseObject), 201
     except Exception as e:
@@ -128,8 +147,13 @@ def get_country(pk):
 
 
 @app.route("/countries", methods=["POST"])
-@jwt_required()
+@jwt_required
 def new_country():
+    current_user = get_jwt_claims()
+
+    if 'admin' not in current_user['roles']:
+        return jsonify({'message': 'Forbidden'}), 403
+
     json_data = request.get_json()
     if not json_data:
         return jsonify({'message': 'No input data provided'}), 400
@@ -169,7 +193,13 @@ def get_stateProvince(pk):
 
 
 @app.route("/state-provinces", methods=["POST"])
+@jwt_required
 def new_stateprovinces():
+    current_user = get_jwt_claims()
+
+    if 'admin' not in current_user['roles']:
+        return jsonify({'message': 'Forbidden'}), 403
+
     json_data = request.get_json()
     if not json_data:
         return jsonify({'message': 'No input data provided'}), 400
@@ -207,7 +237,13 @@ def new_stateprovinces():
 
 
 @app.route('/locations')
+@jwt_required
 def get_locations():
+    current_user = get_jwt_claims()
+
+    if 'admin' not in current_user['roles']:
+        return jsonify({'message': 'Forbidden'}), 403
+
     locations = Location.query.all()
     result = locations_schema.dump(locations)
     return jsonify({'locations': result.data})
@@ -215,6 +251,11 @@ def get_locations():
 
 @app.route("/locations/<int:pk>")
 def get_location(pk):
+    current_user = get_jwt_claims()
+
+#    if 'admin' not in current_user['roles']:
+#        return jsonify({'message': 'Forbidden'}), 403
+
     try:
         location = Location.query.get(pk)
     except IntegrityError:
@@ -272,21 +313,38 @@ def new_locations():
                     "locations": result.data})
 
 
-@app.route('/owners')
+@app.route('/users')
+@jwt_required
 def get_owners():
-    results = Owner.query.all()
-    result = owners_schema.dump(results)
-    return jsonify({'owners': result.data})
+    current_user = get_jwt_claims()
+
+    if 'admin' not in current_user['roles']:
+        return jsonify({'message': 'Forbidden'}), 403
+
+    results = User.query.all()
+    result = users_schema.dump(results)
+    return jsonify({'users': result.data})
 
 
-@app.route("/owners/<int:pk>")
-def get_owner(pk):
+@app.route("/users/<int:pk>")
+@jwt_required
+def get_user(pk):
+    current_claim = get_jwt_claims()
+    current_user = get_jwt_identity()
+    if 'admin' not in current_claim['roles'] and \
+        current_user != pk:
+        return jsonify({'message': 'Forbidden'}), 403
+
     try:
-        results = Owner.query.get(pk)
+        results = User.query.get(pk)
     except IntegrityError:
-        return jsonify({"message": "Owner could not be found."}), 400
-    result = owner_schema.dump(results)
-    return jsonify({"owners": result.data})
+        return jsonify({"message": "User could not be found."}), 400
+
+    if results is None:
+        return jsonify({"message": "User could not be found."}), 400
+
+    result = user_schema.dump(results)
+    return jsonify({"users": result.data})
 
 
 @app.route("/auth/register", methods=["POST"])
@@ -295,13 +353,13 @@ def new_registration():
     if not json_data:
         return jsonify({'message': 'No input data provided'}), 400
     # Validate and deserialize input
-    data, errors = owner_schema.load(json_data)
+    data, errors = user_schema.load(json_data)
     if errors:
         return jsonify(errors), 422
 
-    owner = Owner.query.filter_by(email=json_data.get('email')).first()
-    if not owner:
-        return add_owner_helper(json_data)
+    user = User.query.filter_by(email=data.get('email')).first()
+    if not user:
+        return add_user_helper(json_data)
     else:
         responseObject = {
             'status': 'fail',
@@ -317,24 +375,32 @@ def login():
     if not json_data:
         return jsonify({'message': 'No input data provided'}), 400
     # Validate and deserialize input
-    data, errors = owner_schema.load(json_data)
+    data, errors = user_schema.load(json_data)
     if errors:
         return jsonify(errors), 422
 
+    # We can now pass this complex object directly to the
+    # create_access_token method. This will allow us to access
+    # the properties of this object in the user_claims_loader
+    # function, and get the identity of this object from the
+    # user_identity_loader function.
+ #   access_token = create_access_token(identity=user)
+ #   ret = {'access_token': access_token}
+
     try:
         # fetch the user data
-        owner = Owner.query.filter_by(
+        user = User.query.filter_by(
             email=json_data.get('email')
         ).first()
-        if owner and bcrypt.check_password_hash(
-                owner.passwd, json_data.get('password')
-        ):
-            auth_token = owner.encode_auth_token(owner.id)
-            if auth_token:
+        if user and bcrypt.check_password_hash(user.password,
+                                        json_data.get('password')):
+            access_token = create_access_token(identity=user)
+#            access_token = create_access_token(identity=user)
+            if access_token:
                 responseObject = {
                     'status': 'success',
                     'message': 'Successfully logged in.',
-                    'auth_token': auth_token.decode()
+                    'auth_token': access_token
                 }
                 return jsonify(responseObject), 200
         else:
@@ -353,6 +419,7 @@ def login():
 
 
 @app.route("/auth/logout", methods=["POST"])
+@auth_token_required
 def logout():
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -360,7 +427,7 @@ def logout():
     else:
         auth_token = ''
     if auth_token:
-        resp = Owner.decode_auth_token(auth_token)
+        resp = User.decode_auth_token(auth_token)
         if not isinstance(resp, str):
             # mark the token as blacklisted
             blacklist_token = BlacklistToken(token=auth_token)
@@ -393,48 +460,8 @@ def logout():
         return jsonify(responseObject), 403
 
 
-@app.route("/auth/status")
-def owner_status():
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        try:
-            auth_token = auth_header.split(" ")[1]
-        except IndexError:
-            responseObject = {
-                'status': 'fail',
-                'message': 'Bearer token malformed.'
-            }
-            return jsonify(responseObject), 401
-    else:
-        auth_token = ''
-    if auth_token:
-        resp = Owner.decode_auth_token(auth_token)
-        if not isinstance(resp, str):
-            owner = Owner.query.filter_by(id=resp).first()
-            responseObject = {
-                'status': 'success',
-                'data': {
-                    'user_id': owner.id,
-                    'email': owner.email,
-                    'first_name': owner.firstName,
-                    'last_name': owner.lastName,
-                    'registered_on': owner.registeredOn
-                }
-            }
-            return jsonify(responseObject), 200
-        responseObject = {
-            'status': 'fail',
-            'message': resp
-        }
-    else:
-        responseObject = {
-            'status': 'fail',
-            'message': 'Provide a valid auth token.'
-        }
-    return jsonify(responseObject), 401
-
-
 @app.route('/hives')
+@jwt_required
 def get_hives():
     results = Hive.query.all()
     result = hives_schema.dump(results)
@@ -442,6 +469,7 @@ def get_hives():
 
 
 @app.route("/hives/<int:pk>")
+@jwt_required
 def get_hive(pk):
     try:
         results = Hive.query.get(pk)
@@ -452,6 +480,7 @@ def get_hive(pk):
 
 
 @app.route("/hivedata/", methods=["POST"])
+@jwt_required
 def new_hivedata():
     json_data = request.get_json()
     if not json_data:
@@ -486,6 +515,7 @@ def new_hivedata():
 
 
 @app.route("/hivedata/<int:pk>")
+@jwt_required
 def get_hivedata_id(pk):
     try:
         results = HiveData.query.get(pk)
@@ -496,6 +526,7 @@ def get_hivedata_id(pk):
 
 
 @app.route("/hivedata")
+@jwt_required
 def get_hivedata():
     try:
         results = HiveData.query.all()
@@ -506,6 +537,7 @@ def get_hivedata():
 
 
 @app.route("/")
+@jwt_required
 def get_index():
     return jsonify({"message": "hello"})
 

@@ -35,7 +35,7 @@ class LocationSchema(Schema):
         fields = ('id', 'streetAddress', 'city', 'stateProvince')
 
 
-class OwnerSchema(Schema):
+class UserSchema(Schema):
     location = fields.Nested(LocationSchema)
     hives = fields.Nested('HiveSchema', many=True,
                           exclude=('owner', 'hiveData'))
@@ -50,7 +50,7 @@ class OwnerSchema(Schema):
 
 
 class HiveSchema(Schema):
-    owner = fields.Nested(OwnerSchema)
+    owner = fields.Nested(UserSchema)
     location = fields.Nested(LocationSchema)
     hiveData = fields.Nested('HiveDataSchema', many=True,
                         exclude=('hive', ))
