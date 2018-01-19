@@ -31,7 +31,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
-    api = db.Column(db.String(255))
+#    api = db.Column(db.String(255))
     firstName = db.Column(db.String(50))
     lastName = db.Column(db.String(50))
     phoneNumber = db.Column(db.String(20))
@@ -40,8 +40,8 @@ class User(db.Model):
     registeredOn = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     active = db.Column(db.Boolean())
     confirmed_at = db.Column(db.DateTime())
-    roleId = db.Column(db.Integer, ForeignKey('role.id'))
-    role = db.relationship('Role', backref='user')
+ #   roleId = db.Column(db.Integer, ForeignKey('role.id'))
+ #   role = db.relationship('Role', backref='user')
 #    roles = db.relationship('Role', secondary=roles_users,
 #                            backref=db.backref('users', lazy='dynamic'))
 
@@ -179,6 +179,8 @@ class Hive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ownerId = db.Column(db.Integer, ForeignKey('user.id'))
     owner = db.relationship('User', backref='hives')
+# Hive Id equals the local hive id.
+    hiveId = db.Column(db.Integer)
 # Hive location may differ from the location of the bee keeper
     locationId = db.Column(db.Integer, ForeignKey('location.id'))
     location = db.relationship('Location', backref='hives')

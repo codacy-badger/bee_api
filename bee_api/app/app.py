@@ -79,6 +79,8 @@ def add_country_helper(json_data):
     return country
 
 def add_user_helper(json_data):
+    errMessage=""
+
     if 'firstName' in json_data:
         fname = json_data.get('firstName')
     else:
@@ -101,10 +103,20 @@ def add_user_helper(json_data):
     else:
         role_id = None
 
+    if 'email' in json_data:
+        email = json_data['email']
+    else:
+        errMessage = "Email is required"
+
+    if 'password' in json_data:
+        password = json_data['password']
+    else:
+        errMessage += "Password is required"
+
     try:
         user = User(
-            email=json_data.get('email'),
-            password=json_data.get('password'),
+            email=email,
+            password=password,
             firstName=fname,
             lastName=lname,
             phoneNumber=phonenumber,
@@ -124,9 +136,9 @@ def add_user_helper(json_data):
     except Exception as e:
         responseObject = {
             'status': 'fail',
-            'message': 'Some error occurred. Please try again.'
+            'message': errMessage
         }
-        return jsonify(responseObject), 401
+        return jsonify(responseObject), 400
 
 
 @app.route('/countries')
@@ -381,9 +393,10 @@ def login():
 
     try:
         # fetch the user data
-        user = User.query.filter_by(email=json_data.get('email')).first()
+        user_data = json_data.get('user')
+        user = User.query.filter_by(email=user_data.get('email')).first()
         if user and bcrypt.check_password_hash(user.password,
-                                        json_data.get('password')):
+                                        user_data.get('password')):
             access_token = create_access_token(identity=user)
 #            access_token = create_access_token(identity=user)
             if access_token:
@@ -400,7 +413,6 @@ def login():
             }
             return jsonify(responseObject), 404
     except Exception as e:
-        print(e)
         responseObject = {
             'status': 'fail',
             'message': 'Try again'
