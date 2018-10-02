@@ -4,8 +4,8 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 
-from bee_api.server import bcrypt, db
-from bee_api.models import User, BlacklistToken
+from bee_api import bcrypt, db
+from bee_api import User, BlacklistToken
 
 auth_blueprint = Blueprint('auth', __name__)
 

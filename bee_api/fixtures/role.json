@@ -1,7 +1,5 @@
 [
-  {
-    "model": "bee_api.models.Role",
-    "records": [
+
       {
         "name": "user",
         "description": "User Account"
@@ -11,5 +9,4 @@
         "description": "Administrator Account"
       }
     ]
-  }
-]
+

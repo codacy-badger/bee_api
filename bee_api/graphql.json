@@ -1,0 +1,46 @@
+mutation {
+  createStateProvince(input:{
+    name: "Aberdeen City",
+    country: "Scotland"
+  }) {
+    StateProvince {
+      id
+    }
+  }
+}
+
+{
+  countryList {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    edges {
+      node {
+        id
+        name
+        stateProvinces {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation {
+  createLocation(input:{
+    streetAddress: "123 Main St."
+    city: "Boston"
+    stateProvince: "Massachusetts"
+    postalCode:"02210"
+  }) {
+    Location {
+      id
+    }
+  }
+}

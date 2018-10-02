@@ -1,7 +1,5 @@
 [
-    {
-        "model": "bee_api.models.StateProvince",
-        "records": [{
+{
             "name": "Alabama",
             "countryId": 1,
             "abbreviation": "AL"
@@ -252,5 +250,3 @@
             "abbreviation": "WY"
           }
         ]
-    }
-]

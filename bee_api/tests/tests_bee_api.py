@@ -3,8 +3,8 @@ import glob
 import json
 from flask_fixtures import load_fixtures
 from flask_fixtures.loaders import JSONLoader
-from bee_api.app.app import db, app
-from bee_api.models import User, Role
+from bee_api import db
+from bee_api import User, Role
 from datetime import datetime
 
 import unittest
@@ -71,29 +71,29 @@ class BeeWebTestCase(unittest.TestCase):
             'APP_SETTINGS',
             'bee_api.config.TestingConfig'
         )
-        app.config.from_object(app_settings)
+        bee_api.config.from_object(app_settings)
 
         fixture_files = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             '..','fixtures','*json')
 
-        with app.app_context():
+        with bee_api.app_context():
             db.create_all()
             for fixture_file in glob.glob(fixture_files):
                 fixtures = JSONLoader().load(fixture_file)
                 load_fixtures(db, fixtures)
 
-        app.testing = True
-        self.app = app.test_client()
+        bee_api.testing = True
+        self.app = bee_api.test_client()
 
 
     def tearDown(self):
         db.session.remove()
-        with app.app_context():
+        with bee_api.app_context():
             db.drop_all()
 #            os.close(self.db_fd)
-#            os.unlink(os.path.join(app.config.basedir,
-#                                   app.config.database_name))
+#            os.unlink(os.path.join(classes.config.basedir,
+#                                   classes.config.database_name))
 
 
     def test_get_all_countries(self):
@@ -113,13 +113,13 @@ class BeeWebTestCase(unittest.TestCase):
         self.assertEqual(json_resp['countries']['id'], 2)
 
 #    def test_add_country(self):
-#        rv = self.app.post('/countries/',
+#        rv = self.classes.post('/countries/',
 #                           content_type='application/json',
 #                           data=json.dumps(dict(name='West Germany')))
 
 #        self.assertEqual(rv.status_code, 200)
 
-#        rv = self.app.post('/countries/',
+#        rv = self.classes.post('/countries/',
 #                           content_type='application/json',
 #                           data=json.dumps({'name':'West Germany'}))
 

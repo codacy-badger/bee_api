@@ -1,14 +1,11 @@
 [
-    {
-        "model": "bee_api.models.Country",
-        "records": [{
-            "name": "United States"
-        },
-        {
-            "name": "Canada"
-        },
-        {
-            "name": "Mexico"
-        }]
-    }
+  {
+    "name": "United States"
+  },
+  {
+    "name": "Canada"
+  },
+  {
+    "name": "Mexico"
+  }
 ]

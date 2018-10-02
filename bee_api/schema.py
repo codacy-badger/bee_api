@@ -1,68 +1,32 @@
-from marshmallow import Schema, fields, ValidationError, pre_load
-#from models import *
+import graphene
+from graphene import relay
+from graphene_sqlalchemy import SQLAlchemyConnectionField
+from bee_api.classes.country.schema \
+    import (Country, CreateCountry, UpdateCountry)
+from bee_api.classes.user.schema import (User)
+from bee_api.classes.hive.schema import (Hive)
+from bee_api.classes.state_province.schema \
+    import (StateProvince, CreateStateProvince,  UpdateStateProvince)
+from bee_api.classes.location.schema\
+    import Location, CreateLocation, UpdateLocation
 
 
-# Custom validator
-def must_not_be_blank(data):
-    if not data:
-        raise ValidationError('Data not provided.')
+class Query(graphene.ObjectType):
+    node = relay.Node.Field()
+    stateProvinceList = SQLAlchemyConnectionField(StateProvince)
+    countryList = SQLAlchemyConnectionField(Country)
+    locationList = SQLAlchemyConnectionField(Location)
+    userList = SQLAlchemyConnectionField(User)
+    hivesList = SQLAlchemyConnectionField(Hive)
 
 
-class CountrySchema(Schema):
-    stateProvinces = fields.Nested('StateProvinceSchema', many=True,
-                        exclude=('country', ))
-
-    class Meta:
-        fields = ('id', 'name', 'stateProvinces')
-
-
-class StateProvinceSchema(Schema):
-    country = fields.Nested(CountrySchema, only=('id', 'name'),
-                            exclude=('stateProvinces', ))
-    location = fields.Nested('LocationSchema', many=True,
-                            exclude=('statesProvince', ))
-
-    class Meta:
-        fields = ('id', 'name', 'abbreviation', 'country',
-                  'location')
+class Mutation(graphene.ObjectType):
+    createCountry = CreateCountry.Field()
+    updateCountry = UpdateCountry.Field()
+    createStateProvince = CreateStateProvince.Field()
+    updateStateProvince = UpdateStateProvince.Field()
+    createLocation = CreateLocation.Field()
+    updateLocation = UpdateLocation.Field()
 
 
-class LocationSchema(Schema):
-    stateProvince = fields.Nested('StateProvinceSchema',
-                        exclude=('location', ))
-
-    class Meta:
-        fields = ('id', 'streetAddress', 'city', 'stateProvince')
-
-
-class UserSchema(Schema):
-    location = fields.Nested(LocationSchema)
-    hives = fields.Nested('HiveSchema', many=True,
-                          exclude=('owner', 'hiveData'))
-    fullName = fields.Method("format_name", dump_only=True)
-
-    class Meta:
-        fields = ('id', 'firstName', 'lastName', 'email', 'phoneNumber',
-                   'fullName', 'location', 'hives')
-
-    def format_name(self, owner):
-        return "{} {}".format(owner.firstName, owner.lastName)
-
-
-class HiveSchema(Schema):
-    owner = fields.Nested(UserSchema)
-    location = fields.Nested(LocationSchema)
-    hiveData = fields.Nested('HiveDataSchema', many=True,
-                        exclude=('hive', ))
-
-    class Meta:
-        fields = ('id', 'hiveData', 'owner', 'location', 'dateCreated',
-                  'lastUpdate')
-
-class HiveDataSchema(Schema):
-    hive = fields.Nested(HiveSchema, exclude = ('stateProvinces',))
-    probes = []
-
-    class Meta:
-        fields = ('id', 'hive', 'probes', 'dateCreated', 'temperature',
-                  'humidity', 'outdoor', 'sensor')
+schema = graphene.Schema(query=Query, mutation=Mutation)

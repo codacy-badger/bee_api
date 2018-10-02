@@ -6,11 +6,13 @@ import fixtures as _fixtures
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
-from bee_api import app, db, models
+from bee_api import db
+from bee_api import models
 
-migrate = Migrate(app, db)
-manager = Manager(app)
+migrate = Migrate(bee_api, db)
+manager = Manager(bee_api)
 manager.add_command('db', MigrateCommand)
+
 
 COV = coverage.coverage(
     branch=True,
@@ -27,13 +29,13 @@ COV.start()
 @manager.command
 def tables():
     "Create database tables."
-    models.create_tables(app)
+    models.create_tables(bee_api)
 
 
 @manager.command
 def fixtures():
     "Install test data fixtures into the configured database."
-    _fixtures.install(app, *_fixtures.all_data)
+    _fixtures.install(bee_api, *_fixtures.all_data)
 
 
 @manager.command

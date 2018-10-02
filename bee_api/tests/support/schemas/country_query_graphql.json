@@ -1,0 +1,18 @@
+{
+  "data": {
+    "countryList": {
+      "edges": [
+        {
+          "node": {
+            "name": "United States"
+          }
+        },
+        {
+          "node": {
+            "name": "Canada"
+          }
+        }
+      ]
+    }
+  }
+}
