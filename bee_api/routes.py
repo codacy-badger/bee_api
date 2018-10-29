@@ -3,9 +3,9 @@ from flask_graphql import GraphQLView
 from flask_security \
     import (login_required, auth_token_required,
             http_auth_required)
-from bee_api.app import (app, api)
-from bee_api.schema import schema
-from bee_api.classes.user.resource import (UserListResource, UserResource,
+from app import (app, api)
+from schema import schema
+from classes.user.resource import (UserListResource, UserResource,
                                            RoleListResource, RoleResource)
 
 

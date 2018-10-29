@@ -1,7 +1,7 @@
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from bee_api.classes.hive.model import Hive as HiveModel
-from bee_api.classes.hive.model import HiveData as HiveDataModel
+from classes.hive.model import Hive as HiveModel
+from classes.hive.model import HiveData as HiveDataModel
 
 
 class Hive(SQLAlchemyObjectType):

@@ -1,11 +1,11 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from bee_api.helpers import utils
-from bee_api.database import db
-from bee_api.classes.state_province.model \
+from helpers import utils
+from database import db
+from classes.state_province.model \
     import StateProvince as StateProvinceModel
-from bee_api.classes.country.schema import check_country
+from classes.country.schema import check_country
 
 
 def check_state_province(data):

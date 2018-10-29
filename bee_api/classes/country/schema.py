@@ -1,9 +1,9 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from bee_api.helpers import utils
-from bee_api.database import db
-from bee_api.classes.country.model import Country as CountryModel
+from helpers import utils
+from database import db
+from classes.country.model import Country as CountryModel
 
 
 def check_country(data):

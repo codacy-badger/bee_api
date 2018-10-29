@@ -1,10 +1,10 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from bee_api.helpers import utils
-from bee_api.database import db
-from bee_api.classes.location.model import Location as LocationModel
-from bee_api.classes.state_province.schema import check_state_province
+from helpers import utils
+from database import db
+from classes.location.model import Location as LocationModel
+from classes.state_province.schema import check_state_province
 
 
 def check_location(data):

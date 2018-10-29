@@ -1,8 +1,8 @@
 import pytest
 
-from bee_api.app import app
-from bee_api.database import db
-from bee_api.classes.country.model import Country
+from app import app
+from database import db
+from classes.country.model import Country
 
 
 @pytest.fixture(scope='module')

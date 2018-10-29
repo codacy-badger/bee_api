@@ -12,12 +12,12 @@ CORS(app)
 
 app_settings = os.getenv(
     'APP_SETTINGS',
-    'bee_api.config.DevelopmentConfig'
+    'config.DevelopmentConfig'
 )
 app.config.from_object(app_settings)
 
-from bee_api.database import (db)
-from bee_api.classes.user.model import (User, Role)
+from database import (db)
+from classes.user.model import (User, Role)
 api = Api(app)
 
 if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
@@ -26,7 +26,7 @@ if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
 
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
-import bee_api.routes
+import routes
 
 
 @app.teardown_appcontext

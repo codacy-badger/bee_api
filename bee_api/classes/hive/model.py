@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy import *
 from sqlalchemy.orm import (relationship)
-from bee_api.database import Base
+from database import Base
 
 
 class Hive(Base):

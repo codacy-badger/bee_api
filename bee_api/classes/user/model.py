@@ -2,8 +2,8 @@ import datetime
 from sqlalchemy import *
 from sqlalchemy.orm import (relationship, backref)
 from flask_security import (UserMixin, RoleMixin)
-from bee_api.database import Base
-from bee_api.classes.location.model import Location
+from database import Base
+from classes.location.model import Location
 
 class RolesUsers(Base):
     __tablename__ = 'roles_users'

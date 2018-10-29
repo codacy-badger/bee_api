@@ -1,6 +1,6 @@
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene import relay
-from bee_api.classes.user.model import User as UserModel
+from classes.user.model import User as UserModel
 
 
 class User(SQLAlchemyObjectType):

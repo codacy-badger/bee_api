@@ -1,9 +1,9 @@
 import pytest
-from bee_api.classes.country.model import Country
-from bee_api.classes.state_province.model import StateProvince
-from bee_api.classes.location.model import Location
-from bee_api.classes.user.model import (User, Role, RolesUsers)
-from bee_api.classes.hive.model import (HiveData, Hive)
+from classes.country.model import Country
+from classes.state_province.model import StateProvince
+from classes.location.model import Location
+from classes.user.model import (User, Role, RolesUsers)
+from classes.hive.model import (HiveData, Hive)
 
 @pytest.fixture(scope='module')
 def new_country():

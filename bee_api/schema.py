@@ -1,13 +1,13 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField
-from bee_api.classes.country.schema \
+from classes.country.schema \
     import (Country, CreateCountry, UpdateCountry)
-from bee_api.classes.user.schema import (User)
-from bee_api.classes.hive.schema import (Hive)
-from bee_api.classes.state_province.schema \
+from classes.user.schema import (User)
+from classes.hive.schema import (Hive)
+from classes.state_province.schema \
     import (StateProvince, CreateStateProvince,  UpdateStateProvince)
-from bee_api.classes.location.schema\
+from classes.location.schema\
     import Location, CreateLocation, UpdateLocation
 
 

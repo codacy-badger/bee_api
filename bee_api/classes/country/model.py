@@ -1,5 +1,5 @@
 from sqlalchemy import *
-from bee_api.database import (Base)
+from database import (Base)
 
 
 class Country(Base):
