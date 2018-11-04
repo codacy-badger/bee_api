@@ -2,8 +2,8 @@ from flask_restful import (reqparse, Resource, fields, marshal_with,
                            abort)
 from flask_security.utils import hash_password
 from flask_security import (login_required, current_user)
-from bee_api.classes.user.model import (User, Role)
-from bee_api.app import db
+from classes.user.model import (User, Role)
+from app import db
 
 role_fields = {
     'id': fields.Integer,
