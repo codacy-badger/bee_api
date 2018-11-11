@@ -3,7 +3,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import (relationship, backref)
 from flask_security import (UserMixin, RoleMixin)
 from database import Base
-from classes.location.model import Location
+
 
 class RolesUsers(Base):
     __tablename__ = 'roles_users'

@@ -2,7 +2,7 @@ import sys
 import logging
 from ast import literal_eval
 from bee_api.database import db_session
-from bee_api.models import (Country, StateProvince, Location, Role, User)
+from bee_api.classes import (Country, StateProvince, Location)
 from bee_api.app import bee_api
 from flask_security import SQLAlchemyUserDatastore, Security
 from flask_security.utils import hash_password
@@ -14,6 +14,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+
 def create_countries():
     log.info('Insert Country data in database')
     with open('fixtures/country.json', 'r') as file:
@@ -21,6 +22,7 @@ def create_countries():
         for record in data:
             db_session.add(Country(**record))
         db_session.commit()
+
 
 def create_provinces():
     log.info('Insert State data in database')
@@ -30,6 +32,7 @@ def create_provinces():
             db_session.add(StateProvince(**record))
         db_session.commit()
 
+
 def create_locations():
     log.info('Insert Location data in database')
     with open('fixtures/location.json', 'r') as file:
@@ -37,6 +40,7 @@ def create_locations():
         for record in data:
             db_session.add(Location(**record))
         db_session.commit()
+
 
 def create_roles_users():
     log.info('Insert Role data in database')
