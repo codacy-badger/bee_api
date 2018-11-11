@@ -1,0 +1,7 @@
+user=postgres
+host=db
+port=5432
+db=postgres
+web-db=billing
+web-user=flask
+type=postgres

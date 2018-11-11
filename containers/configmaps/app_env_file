@@ -1,0 +1,2 @@
+python-path=/app
+app-settings=api.config.TestingConfig

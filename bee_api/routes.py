@@ -12,7 +12,7 @@ from bee_api.classes.user.resource import (UserListResource, UserResource,
 def graphql_token_view():
     view = GraphQLView.as_view('graphql', schema=schema,
                                graphiql=bool(app.config.get("DEBUG", False)))
-    view = auth_token_required(view)
+ #   view = auth_token_required(view)
     return view
 
 

@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-create-job
+spec:
+  template:
+    metadata:
+      name: db-schema-create
+      labels:
+        task: db-schema-create
+    spec:
+      containers:
+      - name: data-create
+        image: markley-cloud-server:production9
+        env:
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: host
+                name: db-config
+          - name: ROOT_DB
+            valueFrom:
+              configMapKeyRef:
+                key: db
+                name: db-config
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                key: user
+                name: db-config
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: db-password
+                name: passwords
+          - name: APP_USER
+            valueFrom:
+              configMapKeyRef:
+                key: web-user
+                name: db-config
+          - name: DB_TYPE
+            valueFrom:
+              configMapKeyRef:
+                key: type
+                name: db-config
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: web-db
+                name: db-config
+          - name: APP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: app-password
+                name: passwords
+        command: ["/bin/sh"]
+        args: [ "-c", "env;python api/seed.py -c"]
+
+      restartPolicy: Never

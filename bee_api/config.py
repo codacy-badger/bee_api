@@ -59,11 +59,17 @@ class DevelopmentConfig(BaseConfig):
     basedir = os.path.abspath(os.path.dirname(__file__))
     DEBUG = True
     BCRYPT_LOG_ROUNDS = 4
-    DATABASE_TYPE = 'postgresql'
-    DATABASE_USER = 'bee_db'
-    DATABASE_PASSWORD = '10ff1ce0!'
-    DATABASE_PORT = 5433
-    DATABASE_HOST = 'localhost'
+    DATABASE_TYPE = 'sqlite'
+    DATABASE_NAME = 'beehive'
+    DATABASE_USER = None
+    DATABASE_PASSWORD = None
+    DATABASE_PORT = None
+    DATABASE_HOST = None
+#    DATABASE_TYPE = 'postgresql'
+#    DATABASE_USER = 'bee_db'
+#    DATABASE_PASSWORD = '10ff1ce0!'
+#    DATABASE_PORT = 5433
+#    DATABASE_HOST = 'localhost'
     DATABASE_NAME = 'beehive_dev'
     if DATABASE_TYPE == 'sqlite':
         SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, DATABASE_NAME)

@@ -1,0 +1,66 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: flask
+  name: flask
+spec:
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: flask
+    spec:
+      containers:
+      - env:
+        - name: APP_SETTINGS
+          valueFrom:
+            configMapKeyRef:
+              key: app-settings
+              name: app-config
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: host
+              name: db-config
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: web-db
+              name: db-config
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: port
+              name: db-config
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: app-password
+              name: passwords
+        - name: DB_TYPE
+          valueFrom:
+            configMapKeyRef:
+              key: type
+              name: db-config
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: web-user
+              name: db-config
+        - name: PYTHONPATH
+          valueFrom:
+            configMapKeyRef:
+              key: python-path
+              name: app-config
+        image: markley-cloud-server:production8
+        name: flask
+        resources: {}
+      hostname: flask
+      restartPolicy: Always
+status: {}
