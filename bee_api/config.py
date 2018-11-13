@@ -60,9 +60,9 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     BCRYPT_LOG_ROUNDS = 4
     DATABASE_TYPE = 'postgresql'
-    DATABASE_USER = 'bee_db'
+    DATABASE_USER = 'postgres'
     DATABASE_PASSWORD = '10ff1ce0!'
-    DATABASE_PORT = 5433
+    DATABASE_PORT = 5432
     DATABASE_HOST = 'localhost'
     DATABASE_NAME = 'beehive_dev'
     if DATABASE_TYPE == 'sqlite':

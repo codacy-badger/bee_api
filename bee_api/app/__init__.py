@@ -3,8 +3,6 @@ import os
 from flask_cors import CORS
 from flask_restful import Api
 from flask import Flask
-from flask_migrate import Migrate
-from flask_script import Manager
 from flask_security import (Security, SQLAlchemyUserDatastore)
 
 app = Flask(__name__)
