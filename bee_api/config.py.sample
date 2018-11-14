@@ -61,7 +61,7 @@ class DevelopmentConfig(BaseConfig):
     BCRYPT_LOG_ROUNDS = 4
     DATABASE_TYPE = 'postgresql'
     DATABASE_USER = 'postgres'
-    DATABASE_PASSWORD = '10ff1ce0!'
+    DATABASE_PASSWORD = 'mypassword'
     DATABASE_PORT = 5432
     DATABASE_HOST = 'localhost'
     DATABASE_NAME = 'beehive_dev'

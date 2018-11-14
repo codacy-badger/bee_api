@@ -6,3 +6,4 @@ bee_api/.idea/
 bee_api/migrations_old/
 bee_api/*.db
 bee_api/tests/__pycache__/
+bee_api/config.py
