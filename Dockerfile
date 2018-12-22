@@ -15,4 +15,5 @@ COPY ./bee_api/schema.py /app/schema.py
 COPY ./bee_api/uwsgi.ini /app/uwsgi.ini
 COPY ./bee_api/requirements.txt /app/requirements.txt
 
+EXPOSE 8000
 RUN pip install -r /app/requirements.txt
