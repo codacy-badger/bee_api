@@ -9,7 +9,7 @@ from flask_security import (SQLAlchemyUserDatastore)
 from flask_security.utils import hash_password
 
 from app import app
-from database import db
+from database import (db, engine)
 from classes import *
 
 
@@ -25,6 +25,7 @@ migrate = Migrate(app, db)
 manager = Manager(app)
 
 manager.add_command('db', MigrateCommand)
+
 
 def create_countries():
     log.info('Insert Country data in database')
@@ -59,10 +60,17 @@ def create_roles_users():
     admin = user_datastore.find_or_create_role(name='Admin',
                                                description='Administrator')
     user_datastore.find_or_create_role(name='api', description='API user')
-    user = user_datastore.create_user(email='test@example.com',
-                                      password=hash_password('test123'))
+    user = user_datastore.create_user(email=app.config['ADMIN_EMAIL'],
+                                      password=app.config['ADMIN_PASSWORD'])
     user_datastore.add_role_to_user(user, admin)
     db.session.commit()
+
+
+@manager.command
+def create_db():
+    from sqlalchemy_utils import (database_exists, create_database)
+    if not database_exists(engine.url):
+        create_database(engine.url)
 
 
 @manager.command
