@@ -3,8 +3,9 @@ import glob
 import json
 from flask_fixtures import load_fixtures
 from flask_fixtures.loaders import JSONLoader
-from bee_api import db
-from bee_api import User, Role
+from app import app
+from database import db
+from classes import User, Role
 from datetime import datetime
 
 import unittest
@@ -71,21 +72,20 @@ class BeeWebTestCase(unittest.TestCase):
             'APP_SETTINGS',
             'bee_api.config.TestingConfig'
         )
-        bee_api.config.from_object(app_settings)
+        app.config.from_object(app_settings)
 
         fixture_files = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             '..','fixtures','*json')
 
-        with bee_api.app_context():
+        with app.app_context():
             db.create_all()
             for fixture_file in glob.glob(fixture_files):
                 fixtures = JSONLoader().load(fixture_file)
                 load_fixtures(db, fixtures)
 
-        bee_api.testing = True
-        self.app = bee_api.test_client()
-
+        app.testing = True
+        self.app = app.test_client()
 
     def tearDown(self):
         db.session.remove()
@@ -431,6 +431,7 @@ class BeeWebTestCase(unittest.TestCase):
                           )
                           )
         self.assertEqual(rv.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()

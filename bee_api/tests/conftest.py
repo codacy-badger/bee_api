@@ -28,7 +28,7 @@ def init_database():
     db.create_all()
 
     # Insert user data
-    country1= Country(name='United States')
+    country1 = Country(name='United States')
     country2 = Country(name='Canada')
 #    user1 = User(email='patkennedy79@gmail.com', plaintext_password='FlaskIsAwesome')
 #    user2 = User(email='kennedyfamilyrecipes@gmail.com', plaintext_password='PaSsWoRd')

@@ -1,5 +1,8 @@
 # bee_api
-Repo is the Web API calls for processing data
+[![Build Status](https://travis-ci.org/BeeRaspberry/bee_api.svg?branch=master)](https://travis-ci.org/BeeRaspberry/bee_api)
+[![Coverage Status](https://coveralls.io/repos/github/BeeRaspberry/bee_api/badge.svg)](https://coveralls.io/github/BeeRaspberry/bee_api)
+
+Repo is the Web API calls for processing data.
 
 ## Work in Progress
 

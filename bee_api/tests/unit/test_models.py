@@ -5,6 +5,7 @@ from classes.location.model import Location
 from classes.user.model import (User, Role, RolesUsers)
 from classes.hive.model import (HiveData, Hive)
 
+
 @pytest.fixture(scope='module')
 def new_country():
     return Country(name='Great Britain')
@@ -27,7 +28,9 @@ def new_location(new_state_province):
 
 @pytest.fixture(scope='module')
 def new_role():
-    return Role(name='queen', description='Queen bee')
+    role_list = []
+    role_list.append(Role(name='queen', description='Queen bee'))
+    return role_list
 
 
 #@pytest.fixture(scope='module')
@@ -39,7 +42,7 @@ def new_role():
 @pytest.fixture(scope='module')
 @pytest.mark.usefixtures('new_location', 'new_role')
 def new_user(new_location, new_role):
-    return User(email='bee.min@bee.org', password='password',
+    return User(email='bee.mine@bee.org', password='password',
                 firstName='Queen', lastName='Bee', phoneNumber='1234567890',
                 location=new_location, roles=new_role)
 
@@ -52,8 +55,8 @@ def new_hive(new_location, new_user):
 
 @pytest.mark.usefixtures('new_role')
 def test_new_role(new_role):
-    assert new_role.name == 'queen'
-    assert new_role.description == 'Queen bee'
+    assert new_role[0].name == 'queen'
+    assert new_role[0].description == 'Queen bee'
 
 
 @pytest.mark.usefixtures('new_user', 'new_role', 'new_location')

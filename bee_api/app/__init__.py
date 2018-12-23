@@ -12,6 +12,11 @@ app_settings = os.getenv(
     'APP_SETTINGS',
     'config.DevelopmentConfig'
 )
+
+travis = os.getenv('TRAVIS', None)
+if travis:
+    app_settings = 'config-sample.TestingConfig'
+
 app.config.from_object(app_settings)
 
 from database import (db)

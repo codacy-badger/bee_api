@@ -1,2 +1,4 @@
+from app import app
+
 if __name__ == "__main__":
-    bee_api.run()
+    app.run()
