@@ -50,7 +50,7 @@ jwt==0.5.4
 linecache2==1.0.0
 Mako==1.0.7
 MarkupSafe==1.1.0
-marshmallow==2.13.1
+marshmallow==2.16.3
 marshmallow-jsonapi==0.21.0
 mimerender==0.6.0
 more-itertools==4.3.0
