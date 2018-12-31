@@ -1,0 +1,10 @@
+requirements.txt
+run.py
+wsgi.py
+uwsgi.ini
+bee_api/database.py
+bee_api/routes.py
+bee_api/schema.py
+bee_api/app/*
+bee_api/classes/*
+bee_api/helpers/*

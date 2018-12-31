@@ -5,11 +5,10 @@ install:
   - pip install -r requirements.txt
   - pip install coveralls
 script:
-  - cp bee_api/config-sample.py bee_api/config.py
   - python -m pytest --cov .
 after_success:
   - coveralls
-  - tar -zcvf files.tgz requirements.txt bee_api/database.py routes.py schema.py run.py wsgi.py uwsgi.ini
+  - tar -zcvf files.tgz -T tar_files.txt
 deploy:
   provider: releases
   api_key:
