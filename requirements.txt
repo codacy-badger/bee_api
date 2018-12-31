@@ -62,6 +62,7 @@ pathlib2==2.3.3
 pbr==5.1.1
 pluggy==0.8.0
 promise==2.2.1
+psycopg2==2.7.5
 psycopg2-binary==2.7.6.1
 py==1.7.0
 pycparser==2.19
@@ -83,6 +84,7 @@ testtools==2.3.0
 traceback2==1.4.0
 typing==3.6.6
 unittest2==1.1.0
+virtualenv==16.1.0
 waitress==1.1.0
 WebOb==1.8.4
 WebTest==2.0.32
