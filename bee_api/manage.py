@@ -9,8 +9,8 @@ from flask_security import (SQLAlchemyUserDatastore)
 from flask_security.utils import hash_password
 
 from app import app
-from database import (db, engine)
 from classes import *
+from database import (db, engine, Base)
 
 
 log = logging.getLogger(__name__)
@@ -19,35 +19,33 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-script_dir = os.path.join(os.path.dirname(__file__), 'fixtures')
-
 migrate = Migrate(app, db)
 manager = Manager(app)
 
 manager.add_command('db', MigrateCommand)
 
 
-def create_countries():
+def create_countries(load_dir):
     log.info('Insert Country data in database')
-    with open(os.path.join(script_dir, 'country.json'), 'r') as file:
+    with open(os.path.join(load_dir, 'country.json'), 'r') as file:
         data = literal_eval(file.read())
         for record in data:
             db.session.add(Country(**record))
         db.session.commit()
 
 
-def create_provinces():
+def create_provinces(load_dir):
     log.info('Insert State data in database')
-    with open(os.path.join(script_dir, 'state_province.json'), 'r') as file:
+    with open(os.path.join(load_dir, 'state_province.json'), 'r') as file:
         data = literal_eval(file.read())
         for record in data:
             db.session.add(StateProvince(**record))
         db.session.commit()
 
 
-def create_locations():
+def create_locations(load_dir):
     log.info('Insert Location data in database')
-    with open(os.path.join(script_dir, 'location.json'), 'r') as file:
+    with open(os.path.join(load_dir, 'location.json'), 'r') as file:
         data = literal_eval(file.read())
         for record in data:
             db.session.add(Location(**record))
@@ -68,16 +66,34 @@ def create_roles_users():
 
 @manager.command
 def create_db():
+    "Creates database and table schemas from the latest models"
     from sqlalchemy_utils import (database_exists, create_database)
     if not database_exists(engine.url):
         create_database(engine.url)
+        Base.metadata.create_all(engine)
+#        db.session.commit()
+    else:
+        print("Database already exists")
 
 
 @manager.command
-def seed():
-    create_countries()
-    create_provinces()
-    create_locations()
+def drop_db():
+    "Drops Database"
+    from sqlalchemy_utils import (database_exists, drop_database)
+    if database_exists(engine.url):
+        drop_database(engine.url)
+    else:
+        print("Database doesn't exists")
+
+
+@manager.option('-d', '--directory', help='Fixture directory, relative to this script',
+                default='fixtures', dest='seed_dir')
+def seed(seed_dir):
+    "Loads data from fixture files"
+    load_dir = os.path.join(os.path.dirname(__file__), seed_dir)
+    create_countries(load_dir)
+    create_provinces(load_dir)
+    create_locations(load_dir)
     create_roles_users()
 
 

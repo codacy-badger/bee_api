@@ -1,11 +1,14 @@
 [
   {
-    "name": "United States"
+    "name": "United States",
+    "shortName": "US"
   },
   {
-    "name": "Canada"
+    "name": "Canada",
+    "shortName": "CA"
   },
   {
-    "name": "Mexico"
+    "name": "Mexico",
+    "shortName": "MX"
   }
 ]
