@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/BeeRaspberry/bee_api.svg?branch=master)](https://travis-ci.org/BeeRaspberry/bee_api)
 [![Coverage Status](https://coveralls.io/repos/github/BeeRaspberry/bee_api/badge.svg?branch=master)](https://coveralls.io/github/BeeRaspberry/bee_api?branch=master)
 [![codecov](https://codecov.io/gh/BeeRaspberry/bee_api/branch/master/graph/badge.svg)](https://codecov.io/gh/BeeRaspberry/bee_api)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/BeeRaspberry/bee_api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/BeeRaspberry/bee_api/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/BeeRaspberry/bee_api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/BeeRaspberry/bee_api/context:python)
 
 This repo provides the API backend for the web front-end. 
 
