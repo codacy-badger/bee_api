@@ -1,4 +1,5 @@
 # bee_api
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8dfc45c82bde4e4aa01d78b755090bd0)](https://app.codacy.com/app/erikdeirdre/bee_api?utm_source=github.com&utm_medium=referral&utm_content=BeeRaspberry/bee_api&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/BeeRaspberry/bee_api.svg?branch=master)](https://travis-ci.org/BeeRaspberry/bee_api)
 [![Coverage Status](https://coveralls.io/repos/github/BeeRaspberry/bee_api/badge.svg?branch=master)](https://coveralls.io/github/BeeRaspberry/bee_api?branch=master)
 [![codecov](https://codecov.io/gh/BeeRaspberry/bee_api/branch/master/graph/badge.svg)](https://codecov.io/gh/BeeRaspberry/bee_api)
