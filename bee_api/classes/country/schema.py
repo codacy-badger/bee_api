@@ -19,6 +19,7 @@ def check_country(data):
 
 class CountryAttribute:
     name = graphene.String(description="Name of the Country.")
+    shortName = graphene.String(description="Country Abbreviation.")
 
 
 class Country(SQLAlchemyObjectType, CountryAttribute):
@@ -67,3 +68,19 @@ class UpdateCountry(graphene.Mutation):
         country = db.session.query(CountryModel).filter_by(id=data['id']).first()
 
         return UpdateCountry(country=country)
+
+
+class DeleteCountry(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        input = UpdateCountryInput(required=True)
+
+    def mutate(self, info, input):
+        data = utils.input_to_dictionary(input)
+
+        country = db.session.query(CountryModel).filter_by(id=data['id'])
+        country.delete()
+        db.session.commit()
+
+        return DeleteCountry(ok=True)

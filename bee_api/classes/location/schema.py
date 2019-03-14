@@ -77,3 +77,19 @@ class UpdateLocation(graphene.Mutation):
             filter_by(id=data['id']).first()
 
         return UpdateLocation(Location=Location)
+
+
+class DeleteLocation(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        input = UpdateLocationInput(required=True)
+
+    def mutate(self, info, input):
+        data = utils.input_to_dictionary(input)
+
+        location = db.session.query(LocationModel).filter_by(id=data['id'])
+        location.delete()
+        db.session.commit()
+
+        return DeleteLocation(ok=True)

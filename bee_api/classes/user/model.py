@@ -43,6 +43,9 @@ class User(Base, UserMixin):
     def __repr__(self):
         return "{} {}".format(self.firstName, self.lastName)
 
+#    def set_password(self, password):
+#        self.password = generate_password_hash(password)
+
 
 class BlacklistToken(Base):
     """
