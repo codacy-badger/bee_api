@@ -2,6 +2,8 @@ from sqlalchemy import *
 from sqlalchemy.orm import (relationship)
 from database import Base
 
+__all__ = ['Location']
+
 
 class Location(Base):
     __tablename__ = 'location'

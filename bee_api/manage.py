@@ -6,7 +6,6 @@ from ast import *
 from flask_script import Manager
 from flask_migrate import (Migrate, MigrateCommand)
 from flask_security import (SQLAlchemyUserDatastore)
-from flask_security.utils import hash_password
 
 from app import app
 from classes import *

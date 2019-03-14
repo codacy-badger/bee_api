@@ -1,5 +1,4 @@
 import graphene
-from flask_graphql import GraphQLView
 from app import app
 from flask_graphql_auth import (AuthInfoField, GraphQLAuth, get_jwt_identity,
                                 get_raw_jwt, create_access_token, create_refresh_token,

@@ -5,6 +5,8 @@ from graphene import relay
 from classes.user.model import User as UserModel
 from app import db
 
+__all__ = ['Auth', 'AuthAttribute', 'CheckAuth', 'CheckAuthInput']
+
 
 def check_user(data):
     return true

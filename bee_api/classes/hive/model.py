@@ -3,6 +3,8 @@ from sqlalchemy import *
 from sqlalchemy.orm import (relationship)
 from database import Base
 
+__all__ = ['Hive', 'HiveData']
+
 
 class Hive(Base):
     __tablename__ = "hive"

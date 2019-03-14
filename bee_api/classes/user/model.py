@@ -4,6 +4,8 @@ from sqlalchemy.orm import (relationship, backref)
 from flask_security import (UserMixin, RoleMixin)
 from database import Base
 
+__all__ = ['Role', 'RolesUsers', 'RoleMixin']
+
 
 class RolesUsers(Base):
     __tablename__ = 'roles_users'

@@ -1,6 +1,8 @@
 from sqlalchemy import *
 from database import (Base)
 
+__all__ = ['Country']
+
 
 class Country(Base):
     __tablename__ = 'country'

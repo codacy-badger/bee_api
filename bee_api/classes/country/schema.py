@@ -2,7 +2,8 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from helpers import utils
-from database import db
+from database import
+
 from classes.country.model import Country as CountryModel
 
 
