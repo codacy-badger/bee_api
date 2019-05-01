@@ -6,6 +6,8 @@ from database import db
 from classes.location.model import Location as LocationModel
 from classes.state_province.schema import check_state_province
 
+__all__ = ['CreateLocation', 'DeleteLocation', 'UpdateLocation']
+
 
 def check_location(data):
     result = db.session.query(LocationModel). \

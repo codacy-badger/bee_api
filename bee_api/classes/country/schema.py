@@ -5,9 +5,12 @@ from helpers import utils
 from database import db
 from classes.country.model import Country as CountryModel
 
+__all__ = ['CreateCountry', 'DeleteCountry', 'UpdateCountry',
+           'check_country']
+
 
 def check_country(data):
-# Function expects 'data' to originate from StateProvince call.
+    # Function expects 'data' to originate from StateProvince call.
     result = db.session.query(CountryModel). \
         filter_by(name=data['country']).first()
     if result is None:

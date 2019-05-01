@@ -7,6 +7,9 @@ from classes.state_province.model \
     import StateProvince as StateProvinceModel
 from classes.country.schema import check_country
 
+__all__ = ['CreateStateProvince', 'UpdateStateProvince',
+           'DeleteStateProvince', 'check_state_province']
+
 
 def check_state_province(data):
     result = db.session.query(StateProvinceModel). \
