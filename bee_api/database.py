@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (create_engine, MetaData)
 from sqlalchemy.orm import (sessionmaker, scoped_session)
 from flask_migrate import Migrate
-#from influxdb import InfluxDBClient
+from influxdb import InfluxDBClient
 
 from app import app
 
