@@ -3,7 +3,6 @@ from helpers import utils
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene import relay
 from classes.user.model import User as UserModel
-from app import db
 
 __all__ = ['Auth', 'AuthAttribute', 'CheckAuth', 'CheckAuthInput']
 
@@ -39,7 +38,6 @@ class CheckAuth(graphene.Mutation):
         user = UserModel()
         user.email = data['email']
         user.password = data['password']
-        id = user.get_id
         methodList = [method for method in dir(UserModel) if callable(getattr(UserModel, method))]
         print(methodList)
         return CheckAuth(Auth=Auth)

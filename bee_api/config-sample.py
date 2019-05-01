@@ -24,6 +24,12 @@ class BaseConfig:
     DEBUG = False
     BCRYPT_LOG_ROUNDS = 13
 
+    INFLUXDB_HOST = os.environ.get('INFLUXDB_HOST') or 'localhost'
+    INFLUXDB_PORT = os.environ.get('INFLUXDB_PORT') or 8086
+    INFLUXDB_DATABASE =os.environ.get('INFLUXDB_DATABASE') or 'hivedata'
+    INFLUXDB_PASSWORD = os.environ.get('INFLUXDB_PASSWORD') or 'mypassword'
+    INFLUXDB_USER = os.environ.get('INFLUXDB_USER') or 'root'
+
 # Flask-security settings
     SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'
     SECURITY_PASSWORD_SALT = 'mySalt'

@@ -1,5 +1,5 @@
 from flask_security.forms import (RegisterForm, LoginForm)
-from wtforms import (StringField, PasswordField)
+from wtforms import (StringField)
 
 
 class UserRegisterForm(RegisterForm):

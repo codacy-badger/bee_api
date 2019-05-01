@@ -1,4 +1,4 @@
-from flask import jsonify, request, redirect
+from flask import jsonify, request
 from flask_graphql import GraphQLView
 from werkzeug import secure_filename
 
