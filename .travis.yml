@@ -1,6 +1,12 @@
 language: python
 python:
   - "3.7-dev"
+
+addons:
+  apt:
+    packages:
+    - python-influxdb
+
 install:
   - pip install -r requirements.txt
   - pip install -r test_requirements.txt
