@@ -5,6 +5,8 @@ omit =
     */site-packages/*
     */config.py
     */config.sample.py
+    */x64/lib/python??/*
+    */hostedtoolcache/Python/*
 #include = */bee_api/*
 
 [report]
