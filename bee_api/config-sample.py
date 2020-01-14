@@ -95,6 +95,7 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
+    basedir = os.path.abspath(os.path.dirname(__file__))
     SECRET_KEY = 'my_precious_production'
     DATABASE_TYPE = 'postgresql'
     DATABASE_USER = None

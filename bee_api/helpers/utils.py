@@ -11,6 +11,7 @@ def input_to_dictionary(input):
         dictionary[key] = input[key]
     return dictionary
 
+
 # Custom validator
 def must_not_be_blank(data):
     if not data:

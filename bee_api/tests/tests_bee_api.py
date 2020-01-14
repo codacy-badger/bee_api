@@ -89,12 +89,11 @@ class BeeWebTestCase(unittest.TestCase):
 
     def tearDown(self):
         db.session.remove()
-        with bee_api.app_context():
-            db.drop_all()
+#        with bee_api.app_context():
+#            db.drop_all()
 #            os.close(self.db_fd)
 #            os.unlink(os.path.join(classes.config.basedir,
 #                                   classes.config.database_name))
-
 
     def test_get_all_countries(self):
         rv = self.app.get('/countries')

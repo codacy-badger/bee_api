@@ -29,7 +29,7 @@ def process_social_login(user):
             user_dict["first_name"] = names[0]
             user_dict["last_name"] = names[1]
         else:
-            user_dict["first_name"] = name
+            user_dict["first_name"] = user['name']
 
     print('lookup: {}'.format(user['email']))
 # other fields

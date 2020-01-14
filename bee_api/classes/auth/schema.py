@@ -9,7 +9,7 @@ __all__ = ['Auth', 'AuthAttribute', 'CheckAuth', 'CheckAuthInput']
 
 
 def check_user(data):
-    return true
+    return True
 
 
 class AuthAttribute:

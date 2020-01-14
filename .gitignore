@@ -7,3 +7,34 @@ bee_api/migrations_old/
 bee_api/*.db
 bee_api/tests/__pycache__/
 bee_api/config.py
+
+.DS_Store
+.env
+.flaskenv
+*.pyc
+*.pyo
+env/
+env*
+dist/
+build/
+*.egg
+*.egg-info/
+_mailinglist
+.tox/
+.cache/
+.pytest_cache/
+docs/_build/
+app.db
+test_app.db
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+*,cover
+test-results/
+test-reports/
+
+# VsCode
+.vscode/
+~/virtualenvs
