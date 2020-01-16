@@ -1,4 +1,4 @@
-name: Python application
+name: build
 
 on: [push]
 
@@ -13,10 +13,16 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.7
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    - name: set variables
+      run: |
+        echo ::set-env name=APP_SETTINGS::"config-sample.TestingConfig"
+
     - name: Lint with flake8
       run: |
         pip install flake8
@@ -40,31 +46,3 @@ jobs:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: |
         python-codacy-coverage -r test-results/coverage.xml
-
-    - name: create TAR file
-      run: |
-        tar -zcvf files.tgz -T tar_files.txt
-
-    - name: create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ env.RELEASE }}
-        release_name: ${{ env.RELEASE }}
-        body: |
-          Changes in this Release
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: files.tgz
-        asset_name:  files.tgz
-        asset_content_type: application/zip

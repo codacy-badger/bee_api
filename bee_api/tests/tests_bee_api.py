@@ -232,8 +232,8 @@ class BeeWebTestCase(unittest.TestCase):
 
     def test_get_all_statesprovinces(self):
         user = {'email': 'joe@gmail.com', 'password': 'test123'}
-        response = self.create_user_token(account=user)
-        data = json.loads(response.data.decode())
+#        response = self.create_user_token(account=user)
+#        data = json.loads(response.data.decode())
 
         rv = self.app.get('/state-provinces')
         self.assertEqual(rv.status_code, 200)
@@ -343,7 +343,7 @@ class BeeWebTestCase(unittest.TestCase):
         rv = self.app.get('/users/1')
         self.assertEqual(rv.status_code, 401)
 
-    def test_get_user_no_admin(self):
+    def test_get_user_forbidden(self):
         user = {'email': 'joe@gmail.com', 'password': 'test123'}
         response = self.create_user_token(account=user)
         data = json.loads(response.data.decode())

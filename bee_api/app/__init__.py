@@ -23,14 +23,14 @@ if travis:
 
 app.config.from_object(app_settings)
 
-from database import (db, influxDB)
+from database import (db)
 from classes.user.model import (User, Role)
 from classes.user.forms import (UserRegisterForm, UserLoginForm)
-from classes.upload.hive_data import (HiveData)
+#from classes.upload.hive_data import (HiveData)
 
 api = Api(app)
 
-hive_data = HiveData(influxDB)
+#hive_data = HiveData(influxDB)
 
 if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
     from flask.ext.sslify import SSLify
@@ -40,6 +40,7 @@ user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore,
                     login_form=UserLoginForm)
 import routes
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

@@ -42,8 +42,8 @@ class CreateCountry(graphene.Mutation):
     class Arguments:
         input = CreateCountryInput(required=True)
 
-    def mutate(self, info, input):
-        data = utils.input_to_dictionary(input)
+    def mutate(self, info, input_value):
+        data = utils.input_to_dictionary(input_value)
 
         country = CountryModel(**data)
         db.session.add(country)
@@ -62,8 +62,8 @@ class UpdateCountry(graphene.Mutation):
     class Arguments:
         input = UpdateCountryInput(required=True)
 
-    def mutate(self, info, input):
-        data = utils.input_to_dictionary(input)
+    def mutate(self, info, input_value):
+        data = utils.input_to_dictionary(input_value)
 
         country = db.session.query(CountryModel).filter_by(id=data['id'])
         country.update(data)
@@ -79,8 +79,8 @@ class DeleteCountry(graphene.Mutation):
     class Arguments:
         input = UpdateCountryInput(required=True)
 
-    def mutate(self, info, input):
-        data = utils.input_to_dictionary(input)
+    def mutate(self, info, input_value):
+        data = utils.input_to_dictionary(input_value)
 
         country = db.session.query(CountryModel).filter_by(id=data['id'])
         country.delete()

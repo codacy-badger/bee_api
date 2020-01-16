@@ -1,9 +1,6 @@
 # bee_api
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7dcc779f81d0483d93f0e7c1c5a735e6)](https://www.codacy.com/gh/BeeRaspberry/bee_api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BeeRaspberry/bee_api&amp;utm_campaign=Badge_Grade)[![Build Status](https://travis-ci.org/BeeRaspberry/bee_api.svg?branch=master)](https://travis-ci.org/BeeRaspberry/bee_api)
-[![Coverage Status](https://coveralls.io/repos/github/BeeRaspberry/bee_api/badge.svg?branch=master)](https://coveralls.io/github/BeeRaspberry/bee_api?branch=master)
-[![codecov](https://codecov.io/gh/BeeRaspberry/bee_api/branch/master/graph/badge.svg)](https://codecov.io/gh/BeeRaspberry/bee_api)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/BeeRaspberry/bee_api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/BeeRaspberry/bee_api/alerts/)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/BeeRaspberry/bee_api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/BeeRaspberry/bee_api/context:python)
+![](https://github.com/BeeRaspberry/bee_api/workflows/build/badge.svg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7dcc779f81d0483d93f0e7c1c5a735e6)](https://www.codacy.com/gh/BeeRaspberry/bee_api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BeeRaspberry/bee_api&amp;utm_campaign=Badge_Grade)
 
 This repo provides the API backend for the web front-end. 
 
@@ -28,7 +25,7 @@ target_metadata = models.Base.metadata # And this line
 ### Database Commands
 #### Migrations
 The usual statements
-```
+```bash
 python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade

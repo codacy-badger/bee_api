@@ -45,14 +45,13 @@ class CreateLocation(graphene.Mutation):
     class Arguments:
         input = CreateLocationInput(required=True)
 
-    def mutate(self, info, input):
-        data = utils.input_to_dictionary(input)
+    def mutate(self, info, input_value):
+        data = utils.input_to_dictionary(input_value)
         state_data = {'name': input['state_province']}
         state_province = check_state_province(state_data)
         data['state_province'] = state_province
-        Location = check_location(data)
 
-        return CreateLocation(Location=Location)
+        return CreateLocation(Location=check_location(data))
 
 
 class UpdateLocationInput(graphene.InputObjectType,
@@ -68,17 +67,17 @@ class UpdateLocation(graphene.Mutation):
     class Arguments:
         input = UpdateLocationInput(required=True)
 
-    def mutate(self, info, input):
-        data = utils.input_to_dictionary(input)
+    def mutate(self, info, input_value):
+        data = utils.input_to_dictionary(input_value)
 
-        Location = db.session.query(LocationModel).\
+        location = db.session.query(LocationModel).\
             filter_by(id=data['id'])
-        Location.update(data)
+        location.update(data)
         db.session.commit()
-        Location = db.session.query(LocationModel).\
+        location = db.session.query(LocationModel).\
             filter_by(id=data['id']).first()
 
-        return UpdateLocation(Location=Location)
+        return UpdateLocation(Location=location)
 
 
 class DeleteLocation(graphene.Mutation):
@@ -87,8 +86,8 @@ class DeleteLocation(graphene.Mutation):
     class Arguments:
         input = UpdateLocationInput(required=True)
 
-    def mutate(self, info, input):
-        data = utils.input_to_dictionary(input)
+    def mutate(self, info, input_value):
+        data = utils.input_to_dictionary(input_value)
 
         location = db.session.query(LocationModel).filter_by(id=data['id'])
         location.delete()

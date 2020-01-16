@@ -52,30 +52,30 @@ class UserResource(Resource):
     method_decorators = [login_required]
 
     @marshal_with(user_fields)
-    def get(self, id):
-        if current_user.id == id or \
+    def get(self, id_value):
+        if current_user.id == id_value or \
                 'Administrator' in current_user.roles:
-            user = db.session.query(User).filter(User.id == id).first()
+            user = db.session.query(User).filter(User.id == id_value).first()
             if user:
                 return user
-            abort(404, message="User {} doesn't exist".format(id))
+            abort(404, message="User {} doesn't exist".format(id_value))
         abort(403, message="Account doesn't have access")
 
-    def delete(self, id):
-        user = db.session.query(User).filter(User.id == id).first()
+    def delete(self, id_value):
+        user = db.session.query(User).filter(User.id == id_value).first()
 # TODO: Need logic to remove user/role
         if not user:
-            abort(404, message="User {} doesn't exist".format(id))
+            abort(404, message="User {} doesn't exist".format(id_value))
         db.session.delete(user)
         db.session.commit()
         return {}, 204
 
     @marshal_with(user_fields)
-    def put(self, id):
-        if current_user.id == id or \
+    def put(self, id_value):
+        if current_user.id == id_value or \
                 'Administrator' in current_user.roles:
             parsed_args = user_parse.parse_args()
-            user = db.session.query(User).filter(User.id == id).first()
+            user = db.session.query(User).filter(User.id == id_value).first()
             if user:
                 user.email = parsed_args['email']
                 user.first_name = parsed_args['first_name']
@@ -120,27 +120,27 @@ class RoleResource(Resource):
     method_decorators = [login_required]
 
     @marshal_with(role_fields)
-    def get(self, id):
+    def get(self, id_value):
         if 'Administrator' in current_user.roles:
-            role = db.session.query(Role).filter(Role.id == id).first()
+            role = db.session.query(Role).filter(Role.id == id_value).first()
             if role:
                 return role
-            abort(404, message="Role {} doesn't exist".format(id))
+            abort(404, message="Role {} doesn't exist".format(id_value))
         abort(403, message="Account doesn't have access")
 
-    def delete(self, id):
-        role = db.session.query(Role).filter(Role.id == id).first()
+    def delete(self, id_value):
+        role = db.session.query(Role).filter(Role.id == id_value).first()
         if not role:
-            abort(404, message="Role {} doesn't exist".format(id))
+            abort(404, message="Role {} doesn't exist".format(id_value))
         db.session.delete(role)
         db.session.commit()
         return {}, 204
 
     @marshal_with(role_fields)
-    def put(self, id):
+    def put(self, id_value):
         if 'Administrator' in current_user.roles:
             parsed_args = role_parse.parse_args()
-            role = db.session.query(Role).filter(Role.id == id).first()
+            role = db.session.query(Role).filter(Role.id == id_value).first()
             if role:
                 role.name = parsed_args['name']
                 role.description = parsed_args['description']

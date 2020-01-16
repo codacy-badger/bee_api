@@ -1,11 +1,10 @@
-import json
 import unittest
 
 
 class BeeWebTestCase(unittest.TestCase):
     def test_add_hive_data(self):
 
-        json_data = dict(username="joe", password="pass")
+#        json_data = dict(username="joe", password="pass")
 #        rv = self.app.post('/auth/',
 #                           data=json.dumps(json_data),
 #                           content_type='application/json')

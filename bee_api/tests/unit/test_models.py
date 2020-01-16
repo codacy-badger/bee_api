@@ -2,7 +2,7 @@ import pytest
 from classes.country.model import Country
 from classes.state_province.model import StateProvince
 from classes.location.model import Location
-from classes.user.model import (User, Role, RolesUsers)
+from classes.user.model import (User, Role)
 from classes.hive.model import (HiveData, Hive)
 
 
@@ -72,14 +72,6 @@ def test_new_user(new_user, new_role, new_location):
 
 def test_new_country(new_country):
     assert new_country.name == 'Great Britain'
-
-
-@pytest.fixture(scope='module')
-@pytest.mark.usefixtures('new_state_province')
-def new_location(new_state_province):
-    return Location(street_address='123 Main St.', city='Somewhere',
-                        postal_code='01234',
-                        state_province=new_state_province)
 
 
 @pytest.mark.usefixtures('new_location', 'new_state_province')

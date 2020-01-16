@@ -9,8 +9,8 @@ from classes.state_province.schema \
     import (StateProvince, CreateStateProvince,  UpdateStateProvince,
             DeleteStateProvince)
 from classes.location.schema\
-    import Location, CreateLocation, DeleteLocation, UpdateLocation
-from classes.auth.schema import Auth, CheckAuth
+    import (Location, CreateLocation, DeleteLocation, UpdateLocation)
+from classes.auth.schema import (CheckAuth)
 
 
 class Query(graphene.ObjectType):

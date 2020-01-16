@@ -1,6 +1,6 @@
 # project/server/auth/views.py
 
-
+import logging
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 
@@ -81,11 +81,11 @@ class LoginAPI(MethodView):
                 }
                 return make_response(jsonify(responseObject)), 404
         except Exception as e:
-            print(e)
             responseObject = {
                 'status': 'fail',
                 'message': 'Try again'
             }
+            logging.warning("LoginAPI failed: {}".format(e.message))
             return make_response(jsonify(responseObject)), 500
 
 
